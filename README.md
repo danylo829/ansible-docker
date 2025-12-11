@@ -1,7 +1,16 @@
 # Ansible Docker Runner
+[![Release](https://github.com/danylo829/ansible-docker/actions/workflows/ci.yml/badge.svg)](https://github.com/danylo829/ansible-docker/actions/workflows/ci.yml)
+![Version](https://img.shields.io/github/v/tag/danylo829/ansible-docker?label=version)
+![Image Size](https://ghcr-badge.egpl.dev/danylo829/ansible-docker/size?color=%2344cc11&tag=latest&label=image+size)
+![Last Commit](https://img.shields.io/github/last-commit/danylo829/ansible-docker)
+![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
+![License](https://img.shields.io/github/license/danylo829/ansible-docker)
 
 A minimal Docker image based on `alpine/ansible` which allows running Ansible commands and playbooks in a containerized environment. That way you don't need to perform complicated local install of Ansible and its dependencies on your local machine.  
 It supports installing Ansible Galaxy collections/roles and Python packages from requirements files.
+
+## Motivation
+Managing Ansible installations and dependencies on local machines can be cumbersome, especially when working across multiple projects with varying requirements. This Docker image simplifies the process by encapsulating Ansible and its dependencies within a container, ensuring a consistent environment for running Ansible commands and playbooks.
 
 ## Features
 
@@ -11,23 +20,23 @@ It supports installing Ansible Galaxy collections/roles and Python packages from
 
 ## Usage
 
-Run image with passing your current directory as volume to `/playbooks`. After that you can write ansible commands and pass files (configs, inventory, playbooks) as normal.  
+Run image with passing your current directory as volume to `/playbooks`. After that you can write ansible commands and use files (configs, inventory, playbooks) as normal.  
 
 Image will automatically install dependencies if requirements files (`requirements.yml`, `requirements.txt`) are present in the current directory. Below are some examples of how to use the image.
 
 Run and show ansible help (default CMD):
 ```bash
-docker run --rm local/ansible-runner:latest
+docker run --rm ghcr.io/danylo829/ansible-docker:latest
 ```
 
 Run module:
 ```bash
-docker run --rm -v ~/.ssh:/home/ansible/.ssh:ro local/ansible-runner:latest ansible all -m ping
+docker run --rm -v ~/.ssh:/home/ansible/.ssh:ro ghcr.io/danylo829/ansible-docker:latest ansible all -m ping
 ```
 
 Run playbook and pass inventory located in current directory:
 ```bash
-docker run --rm -v $(pwd):/playbooks -v ~/.ssh:/home/ansible/.ssh:ro local/ansible-runner:latest ansible-playbook playbook-example.yml -i inventory
+docker run --rm -v $(pwd):/playbooks -v ~/.ssh:/home/ansible/.ssh:ro ghcr.io/danylo829/ansible-docker:latest ansible-playbook playbook-example.yml -i inventory
 ```
 
 ### Shell functions
@@ -44,7 +53,7 @@ _ansible_base() {
     -v "$(pwd)":/playbooks \
     -v /etc/ansible:/etc/ansible:ro \
     -v /var/log/ansible:/var/log/ansible \
-    local/ansible-runner:latest "$cmd" "$@"
+    ghcr.io/danylo829/ansible-docker:latest "$cmd" "$@"
 }
 
 ansible() {
@@ -95,3 +104,6 @@ docker buildx build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -
 ```
 
 Do not forget to run your local image `local/ansible-runner:latest`, instead of pulling from remote registry. Change it in the shell aliases above if needed.
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
