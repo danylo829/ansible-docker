@@ -46,14 +46,13 @@ Use these shell functions to run Ansible commands conviniently without long dock
 ```bash
 _ansible_base() {
   local cmd="$1"; shift
-  docker run --rm -it \
+  docker run --rm --pull always -itq \
     --network host \
     -u $(id -u):$(id -g) \
     -v ~/.ssh:/home/ansible/.ssh:ro \
     -v "$(pwd)":/playbooks \
     -v /etc/ansible:/etc/ansible:ro \
-    -v /var/log/ansible:/var/log/ansible \
-    ghcr.io/danylo829/ansible-docker:latest "$cmd" "$@"
+     ghcr.io/danylo829/ansible-docker:latest "$cmd" "$@"
 }
 
 ansible() {
