@@ -9,7 +9,7 @@ fi
 
 if [ -f "requirements.txt" ]; then
   echo "Installing pip packages..."
-  python3 -m pip install --break-system-packages -r requirements.txt
+  python3 -m pip install --break-system-packages --quiet -r requirements.txt
 fi
 
 exec "$@"
