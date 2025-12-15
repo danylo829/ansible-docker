@@ -12,4 +12,6 @@ if [ -f "requirements.txt" ]; then
   python3 -m pip install --break-system-packages --quiet -r requirements.txt
 fi
 
+echo "Initialization complete"
+
 exec "$@"

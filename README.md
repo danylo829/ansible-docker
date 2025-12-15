@@ -46,6 +46,7 @@ Use these shell functions to run Ansible commands conviniently without long dock
 ```bash
 _ansible_base() {
   local cmd="$1"; shift
+  echo "Starting ansible container..."
   docker run --rm --pull always -itq \
     --network host \
     -u $(id -u):$(id -g) \
