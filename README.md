@@ -1,7 +1,6 @@
 # Ansible Docker Runner
 [![Release](https://github.com/danylo829/ansible-docker/actions/workflows/ci.yml/badge.svg)](https://github.com/danylo829/ansible-docker/actions/workflows/ci.yml)
 ![Version](https://img.shields.io/github/v/tag/danylo829/ansible-docker?label=version)
-![Image Size](https://ghcr-badge.egpl.dev/danylo829/ansible-docker/size?color=%2344cc11&tag=latest&label=image+size)
 ![Last Commit](https://img.shields.io/github/last-commit/danylo829/ansible-docker)
 ![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
 ![License](https://img.shields.io/github/license/danylo829/ansible-docker)
@@ -87,7 +86,7 @@ docker volume rm ansible-cache ansible-pip-cache
 
 Clone the repository:
 ```bash
-git clone https://github.com/your-repo/ansible-docker.git
+git clone https://github.com/danylo829/ansible-docker.git
 cd ansible-docker
 ```
 
@@ -98,12 +97,26 @@ docker buildx build -t local/ansible-runner:latest .
 
 ## Knowm Issues
 
-If you get `ssh: Bad owner or permissions` errors, try to build image passing UID and GID of your local machine user:
-```bash
-docker buildx build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -t local/ansible-runner:latest .
-```
+* If you get any type of `Bad owner or permissions` errors, try to build image passing UID and GID of your local machine user:
+  ```bash
+  docker buildx build --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -t local/ansible-runner:latest .
+  ```
+  Do not forget to run your local image `local/ansible-runner:latest`, instead of pulling from remote registry. Change it in the shell aliases above if needed.  
+  If error persists, build with GID 1000.
 
-Do not forget to run your local image `local/ansible-runner:latest`, instead of pulling from remote registry. Change it in the shell aliases above if needed.
+* If you get error related to your `~/.ssh/config` you can disable it by adding `-F /dev/null` to your ansible commands:
+  ```bash
+  ansible all -m ping -i inventory -F /dev/null
+  ```
+  Or set this in your `ansible.cfg`:
+  ```
+  [ssh_connection]
+  ssh_args = -F /dev/null
+  ```
+Feel free to remove ssh volume and use other authentication methods or provide your own ways of mounting ssh keys.
+
+## Possible Improvements
+ - Switch to SSH socket forwarding instead of mounting `~/.ssh` directory.
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
